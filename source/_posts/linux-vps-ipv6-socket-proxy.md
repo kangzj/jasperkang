@@ -1,0 +1,30 @@
+---
+title: Linux VPS IPv6代理的一种架设方法
+tags:
+  - ipv6
+  - ipv6代理
+  - socket
+  - ssh
+  - ssh -D
+  - ssh账号
+  - vps
+id: 1516
+categories:
+  - Systems&amp;Servers
+date: 2009-12-29 21:32:24
+---
+
+大部分的软件都需要通过打补丁来支持IPv6，有的甚至就不支持IPv6，代理软件也是同样，真是挺麻烦的一件事情。然而IPv6环境下没有某墙的存在，开个代理还真是有用，根本用不着加密连接，就可以访问被强的内容。原先有一个德国的IPv6的代理，被大家给用挂掉了，没办法，得自己开了。
+
+当然你得有个支持IPv6的主机或者VPS了。用什么软件呢，Kangzj特别懒，不爱打补丁（事实上是把squid打过几次补丁都没有编译成功，让我很恼火）。于是想到了ssh。
+
+ssh -D大家很熟悉了，可以在把本地端口通过加密连接转发到远程服务器，以实现本地socket代理。于是Kangzj就有主意了，让ssh远程登录自己，不就可以开个socket代理了么，呵呵。下面就容易了，在终端执行：
+<pre lang="bash">ssh –Nf –D 9999 kangzj@domain.com
+</pre>
+回车，输入密码，ssh便在后台运行了，就成了一个监听9999端口的socket代理了:-)
+
+搞定，不用安装任何代理软件，哈哈，方便吧？
+
+PS: 由于ssh会加密，所以速度肯定不如不加密的连接。牛逼的同学如果能把支持IPv6的squid等代理软件编译成功的话那是最好不过了。谁会弄，告诉我下哈。
+
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAADsElEQVR4nK2VTW9VVRSGn33OPgWpYLARbKWhQlCHTogoSkjEkQwclEQcNJEwlfgD/AM6NBo1xjhx5LyJ0cYEDHGkJqhtBGKUpm3SFii3vb2956wPB/t+9raEgSs52fuus89613rftdcNH8/c9q9++oe/Vzb5P+3McyNcfm2CcPj9af9w6gwjTwzvethx3Bx3x8xwd1wNM8dMcTNUHTfFLPnX6nVmZpeIYwf3cWD/PhbrvlPkblAzVFurKS6GmmGqqComaS+qmBoTI0Ncu3mXuGvWnrJ+ZSxweDgnkHf8ndVTdbiT3M7cQp2Z31dRTecHAfqydp4ejhwazh6Zezfnu98E1WIQwB3crEuJ2Y45PBTAQUVR9X4At66AppoEVO1Q8sgAOKJJjw6Am6OquDmvHskZ3R87gW+vlHz98zpmiqphkkRVbQtsfPTOC30lJKFbFTgp83bWh7Zx/uX1B6w3hI3NkkZTqEpBRDBRzG2AQHcwcYwEkOGkTERREbLQ/8HxJwuW7zdYrzfZ2iopy4qqEspKaDYravVm33k1R91Q69FA1VBRzFIVvXbx5AgXT44A8MWP81yfu0utIR2aVK3vfCnGrcUNxp8a7gKYKiLCvY2SUvo/aNtnM3e49ucK9S3p0aDdaT0UAVsKi2tVi6IWwNL9JvdqTdihaz79/l+u/rHMxmaJVMLkS2OoKKLWacdeE3IsSxctc2D5Qcl6vUlVVgNt+fkPPcFFmTw1xruvT7SCd7nuVhDQvECzJH90h0azRKoKFRkAmP5lKTWAGRdefoZL554FQNUxB92WvYeA5UN4PtSqwB2phKqsqMpBgAunRhFR3j49zuU3jnX8k6fHEQKXzh1jbmGDuYU6s4t1rt6socUeLLZHhYO2AHSHmzt19ihTZ48O8Hzl/AmunD/BjTvrvPfNX3hWsNpwJCvwYm+ngug4UilSCSq6k8YPtxDwfA+WRawIWFbgscDiULcCEaWqBFOlrLazurupOSHLqGnEKJAY8TwBEHumqUirAjNm52vEPPRV4p01XXMPAQhUBjcWm9QZwijwokgAeYHlHYA06KR1cT6ZvoV56pDUJQEjw0KeaMgj1hPEY4vz2A4eW0/e1qA7KtQdsxTYAG0H3iG4xyK1Y+xm7XmEPOJZDiENzLi2WZHngeOjj2Pe+sMg4GRYyLAsx7ME4FnsyTD9pr0PEc8zPGRAwKXBkYOPEd96cZRvf11g9MDe7e3R4Z4Q+vyEnn3P4t0XzK/W+ODN5/kPfRLewAJVEQ0AAAAASUVORK5CYII%3D)
